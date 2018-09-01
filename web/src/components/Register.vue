@@ -12,6 +12,7 @@
               v-model="email"
               :rules="rules.emailRules"
               label="Email"
+              autocomplete="email"
               clearable
            ></v-text-field>
             <br>
@@ -22,6 +23,7 @@
               :type="show ? 'text' : 'password'"
               name="input-10-1"
               label="Password"
+              autocomplete="new-password"
               hint="At least 8 characters"
               @click:append="show = !show"
             ></v-text-field>
@@ -64,10 +66,11 @@ export default {
   methods: {
     async register () {
       try {
-        await AuthenticationService.register({
+        const response = await AuthenticationService.register({
           email: this.email,
           password: this.password
         })
+        this.$store.dispatch('loginUser', { token: response.data.token, user: response.data.user })
       } catch (error) {
         this.error = error.response.data.error
       }
@@ -77,7 +80,7 @@ export default {
 </script>
 
 <style scoped>
-.error {
-  color: red;
-}
+  .error {
+    color: white;
+  }
 </style>
